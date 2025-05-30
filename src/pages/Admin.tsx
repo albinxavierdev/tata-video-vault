@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ interface Video {
   vehicle_model: string;
   region: string;
   created_at: string;
+  is_short?: boolean;
 }
 
 const Admin = () => {
@@ -31,6 +31,7 @@ const Admin = () => {
     caption: "",
     vehicle_model: "",
     region: "",
+    is_short: false,
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -107,6 +108,7 @@ const Admin = () => {
         caption: "",
         vehicle_model: "",
         region: "",
+        is_short: false,
       });
       setEditingId(null);
       fetchVideos();
@@ -128,6 +130,7 @@ const Admin = () => {
       caption: video.caption || "",
       vehicle_model: video.vehicle_model,
       region: video.region,
+      is_short: video.is_short || false,
     });
     setEditingId(video.id);
   };
@@ -163,6 +166,7 @@ const Admin = () => {
       caption: "",
       vehicle_model: "",
       region: "",
+      is_short: false,
     });
     setEditingId(null);
   };
@@ -237,6 +241,19 @@ const Admin = () => {
                   onChange={(e) => setFormData({...formData, region: e.target.value})}
                   required
                 />
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="is_short"
+                    checked={formData.is_short}
+                    onChange={(e) => setFormData({...formData, is_short: e.target.checked})}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="is_short" className="text-sm text-gray-700">
+                    This is a YouTube Short
+                  </label>
+                </div>
                 
                 <div className="flex space-x-2">
                   <Button 

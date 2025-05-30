@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -31,12 +30,14 @@ export const Header = () => {
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">T</span>
-          </div>
-          <span className="text-xl font-bold text-gray-900">Tata Motors</span>
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <Link to="/" className="flex items-center group">
+          <img
+            src="/tata-logo.jpg"
+            alt="Tata Motors Logo"
+            className="h-10 w-auto transition-transform group-hover:scale-105"
+            style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.08))' }}
+          />
         </Link>
         
         <nav className="flex items-center space-x-4">
