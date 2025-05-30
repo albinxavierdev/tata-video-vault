@@ -51,7 +51,7 @@ export const HeroSection = () => {
         </p>
         <div className="flex justify-center">
           <a
-            href="/videos"
+            href="#success-stories"
             className="px-12 py-5 bg-[#307FE2] text-white font-semibold rounded-md hover:bg-[#2b6fc7] transition-colors text-xl"
           >
             Customer Stories
