@@ -1,8 +1,28 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, LogIn } from "lucide-react";
+import { User, LogOut, LogIn, Search, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+
+const APPLICATION_OPTIONS = [
+  { label: 'Fruits and Vegetables', id: 'fruits-and-vegetables' },
+  { label: 'Cereal', id: 'cereal' },
+  { label: 'Construction', id: 'construction' },
+  { label: 'Logistics', id: 'logistics' },
+  { label: 'Poultry', id: 'poultry' },
+  { label: 'Fisheries', id: 'fisheries' },
+  { label: 'FMCG', id: 'fmcg' },
+  { label: 'Milk', id: 'milk' },
+  { label: 'Refrigerated Vans', id: 'refrigerated-vans' },
+];
 
 export const Header = () => {
   const [user, setUser] = useState(null);
@@ -29,40 +49,30 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="flex items-center group">
-          <img
-            src="/tata-logo.jpg"
-            alt="Tata Motors Logo"
-            className="h-10 w-auto transition-transform group-hover:scale-105"
-            style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.08))' }}
-          />
-        </Link>
-        
-        <nav className="flex items-center space-x-4">
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <Link to="/admin">
-                <Button variant="ghost" size="sm">
-                  <User className="w-4 h-4 mr-2" />
-                  Admin Panel
-                </Button>
+    <header className="bg-[#307FE2] text-white border-b border-gray-800">
+      <div className="container mx-auto px-6 py-3">
+        <div className="flex items-center justify-between">
+          {/* Logo Section */}
+          <Link to="/" className="flex items-center group">
+            <img
+              src="/tata-motors-logo.png"
+              alt="Tata Motors Logo"
+              className="h-10 w-auto transition-transform group-hover:scale-105"
+            />
+          </Link>
+
+          {/* Navigation Menu */}
+          <nav className="flex items-center space-x-8">
+            <a href="#vehicles" className="text-white hover:text-blue-100 transition-colors text-lg font-semibold">Vehicles</a>
+            <a href="#success-stories" className="text-white hover:text-blue-100 transition-colors text-lg font-semibold">Success Stories</a>
+            <a href="#contact-us" className="text-white hover:text-blue-100 transition-colors text-lg font-semibold">Contact Us</a>
+            {user && (
+              <Link to="/admin" className="text-white bg-[#1A4FA0] hover:bg-blue-800 px-4 py-2 rounded-full font-bold shadow transition">
+                Admin Panel
               </Link>
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <Link to="/auth">
-              <Button variant="ghost" size="sm">
-                <LogIn className="w-4 h-4 mr-2" />
-                Sign In
-              </Button>
-            </Link>
-          )}
-        </nav>
+            )}
+          </nav>
+        </div>
       </div>
     </header>
   );

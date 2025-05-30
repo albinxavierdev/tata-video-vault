@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { VideoCard } from "@/components/VideoCard";
 import { Header } from "@/components/Header";
 import { VideoFilters } from "@/components/VideoFilters";
+import { HeroSection } from "@/components/HeroSection";
+import { FindYourDriveSection } from "@/components/FindYourDriveSection";
 
 const WHATSAPP_NUMBER = "+919538022290";
 const WHATSAPP_MESSAGE = encodeURIComponent("Hi, I'm interested in Tata Motors vehicles! Please provide more details.");
@@ -16,6 +18,7 @@ interface Video {
   vehicle_model: string;
   region: string;
   created_at: string;
+  is_short: boolean;
 }
 
 const featuredTestimonialIds = [/* Add 1-3 video IDs to feature, or leave empty for now */];
@@ -39,6 +42,8 @@ const Index = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showMoreShorts, setShowMoreShorts] = useState(false);
+  const [showMoreRegular, setShowMoreRegular] = useState(false);
 
   useEffect(() => {
     fetchVideos();
@@ -54,7 +59,7 @@ const Index = () => {
     setLoading(false);
   };
 
-  const handleFilter = (model: string, region: string) => {
+  const handleFilter = (model: string, region: string, application: string) => {
     let filtered = videos;
     if (model !== "all") {
       filtered = filtered.filter(video => video.vehicle_model === model);
@@ -62,133 +67,97 @@ const Index = () => {
     if (region !== "all") {
       filtered = filtered.filter(video => video.region === region);
     }
+    if (application !== "all") {
+      filtered = filtered.filter(video => video.application === application);
+    }
     setFilteredVideos(filtered);
   };
 
   // Featured testimonials (pick first 1-3 for now)
   const featured = videos.slice(0, 2);
 
+  const shorts = filteredVideos.filter(v => v.is_short);
+  const regulars = filteredVideos.filter(v => !v.is_short);
+  const shortsToShow = showMoreShorts ? shorts : shorts.slice(0, 4);
+  const regularsToShow = showMoreRegular ? regulars : regulars.slice(0, 4);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 text-gray-900 font-sans">
       <Header />
-
-      {/* Hero Section */}
-      <section className="w-full min-h-[350px] flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 py-16 px-4">
-        <div className="w-full max-w-2xl mx-auto flex flex-col items-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 mb-4 leading-tight text-center">
-            Tata Motors Commercials & Testimonials
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-xl text-center">
-            Discover why millions trust Tata Motors. Watch real customer stories and see our vehicles in action.
-          </p>
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-colors duration-200 mb-2"
-          >
-            Enquire on WhatsApp
-          </a>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="max-w-3xl mx-auto py-10 px-4">
-        <div className="bg-gradient-to-br from-blue-50 via-white to-blue-100 rounded-2xl shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-blue-800 mb-3">About Tata Motors</h2>
-          <p className="text-gray-700 text-lg mb-4">
-            Tata Motors is India's leading automobile manufacturer, renowned for its innovative engineering, reliability, and customer-first approach. Our vehicles are designed to empower journeys, whether for business or personal use.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mt-6">
-            <div className="bg-white rounded-lg px-6 py-4 shadow border border-blue-100 hover:shadow-md transition-all">
-              <span className="block text-2xl font-bold text-blue-900 mb-1">#1</span>
-              <span className="text-blue-800">Commercial Vehicle Brand</span>
-            </div>
-            <div className="bg-white rounded-lg px-6 py-4 shadow border border-blue-100 hover:shadow-md transition-all">
-              <span className="block text-2xl font-bold text-blue-900 mb-1">Millions</span>
-              <span className="text-blue-800">of Happy Customers</span>
-            </div>
-            <div className="bg-white rounded-lg px-6 py-4 shadow border border-blue-100 hover:shadow-md transition-all">
-              <span className="block text-2xl font-bold text-blue-900 mb-1">Nationwide</span>
-              <span className="text-blue-800">Service Network</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonial Videos Section */}
-      <section className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold text-blue-900 mb-2 text-center">Customer Testimonials</h2>
-        <p className="text-gray-600 mb-8 text-center">Hear directly from Tata Motors owners across the country.</p>
-        <div className="bg-white/90 rounded-2xl shadow-lg p-6 mb-10 max-w-4xl mx-auto">
+      <HeroSection />
+      <div className="border-t border-blue-100" />
+      <div id="vehicles">
+        <FindYourDriveSection />
+      </div>
+      <div className="border-t border-blue-100" />
+      <section id="success-stories" className="container mx-auto px-4 py-16 bg-white rounded-2xl shadow-lg max-w-7xl min-h-screen">
+        <h2 className="text-4xl font-bold text-[#307FE2] mb-4 text-center tracking-wide">Customer Success Stories</h2>
+        <p className="text-xl text-gray-700 mb-10 text-center">Real journeys, real results—discover how Tata Intra empowers businesses and lives across India.</p>
+        <div className="bg-white rounded-lg p-0 md:p-2 mb-6">
           <VideoFilters onFilter={handleFilter} videos={videos} />
         </div>
-        {filteredVideos.length === 0 ? (
-          <div className="text-center py-12">
-            <h3 className="text-xl text-gray-500">No videos found</h3>
-            <p className="text-gray-400">Try adjusting your filters</p>
-          </div>
-        ) : (
-          <div className="flex flex-wrap items-start gap-8 justify-center">
-            {filteredVideos.map((video) => (
-              <div className="flex-grow-0 flex-shrink-0" key={video.id}>
-                <VideoCard video={video} />
+        {shortsToShow.length > 0 && (
+          <>
+            <h3 className="text-2xl font-semibold text-[#307FE2] mb-4 mt-6 text-center">Shorts</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+              {shortsToShow.map((video) => (
+                <div className="rounded-2xl border-2 border-[#307FE2] bg-white shadow hover:shadow-lg transition p-2" key={video.id}>
+                  <VideoCard video={video} />
+                </div>
+              ))}
+            </div>
+            {shorts.length > 4 && !showMoreShorts && (
+              <div className="flex justify-center mb-8">
+                <button onClick={() => setShowMoreShorts(true)} className="px-8 py-3 bg-[#307FE2] hover:bg-blue-800 text-white rounded-full font-bold shadow transition">Show More Shorts</button>
               </div>
-            ))}
+            )}
+          </>
+        )}
+        {regularsToShow.length > 0 && (
+          <>
+            <h3 className="text-2xl font-semibold text-[#307FE2] mb-4 mt-8 text-center">Customer Stories</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+              {regularsToShow.map((video) => (
+                <div className="rounded-2xl border-2 border-[#307FE2] bg-white shadow hover:shadow-lg transition p-2" key={video.id}>
+                  <VideoCard video={video} />
+                </div>
+              ))}
+            </div>
+            {regulars.length > 4 && !showMoreRegular && (
+              <div className="flex justify-center mb-8">
+                <button onClick={() => setShowMoreRegular(true)} className="px-8 py-3 bg-[#307FE2] hover:bg-blue-800 text-white rounded-full font-bold shadow transition">Show More Stories</button>
+              </div>
+            )}
+          </>
+        )}
+        {shortsToShow.length === 0 && regularsToShow.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-2xl text-gray-500">No videos found</h3>
+            <p className="text-gray-400">Try adjusting your filters</p>
           </div>
         )}
       </section>
-
-      {/* CTA Section */}
-      <section className="text-center py-12 bg-gradient-to-br from-blue-50 via-white to-blue-100 border-t border-blue-100">
-        <div className="inline-block bg-white/90 rounded-2xl shadow-lg px-10 py-8">
-          <h3 className="text-2xl font-bold text-blue-900 mb-4">Ready to join the Tata family?</h3>
+      <div className="border-t border-blue-100" />
+      <section id="contact-us" className="text-center py-16 bg-[#307FE2] border-t border-blue-100">
+        <div className="inline-block bg-white rounded-2xl shadow-lg border-2 border-[#307FE2] px-10 py-8">
+          <h3 className="text-4xl font-bold text-[#307FE2] mb-4">Book your free demo today!</h3>
+          <p className="text-xl text-gray-700 mb-6">Take the next step with Tata Intra—connect with us instantly on WhatsApp and drive your business forward!</p>
           <a
             href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition-colors duration-200"
+            className="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg transition-colors duration-200"
           >
-            Enquire on WhatsApp
+            WhatsApp Us
           </a>
-          <div className="mt-4">
-            <a href="mailto:enquiry@tatamotors.com" className="text-blue-700 underline mx-2">Email Us</a>
-            <span className="text-gray-400">|</span>
-            <a href="tel:+919538022290" className="text-blue-700 underline mx-2">Call: +91 95380 22290</a>
-          </div>
         </div>
       </section>
-
-      {/* FAQ Section */}
-      <section className="max-w-3xl mx-auto py-12 px-4">
-        <div className="bg-white/90 rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-6">
-            {faqs.map((faq, idx) => (
-              <div key={idx} className="bg-gradient-to-br from-blue-50 via-white to-blue-100 rounded-lg shadow p-6 border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">{faq.question}</h3>
-                <p className="text-gray-700 text-base">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-white via-blue-50 to-blue-100 border-t border-blue-100 py-8 mt-8">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center space-x-3 mb-4 md:mb-0">
-            <img src="/tata-logo.jpg" alt="Tata Motors Logo" className="h-8 w-auto" />
-            <span className="text-blue-900 font-bold text-lg">Tata Motors</span>
-          </div>
+      <footer className="bg-blue-50 border-t border-blue-100 py-8 mt-8">
+        <div className="container mx-auto px-4 flex flex-col items-center justify-center gap-4">
           <div className="text-gray-600 text-sm">
             &copy; {new Date().getFullYear()} Tata Motors. All rights reserved.
           </div>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="https://www.facebook.com/TataMotorsGroup" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">Facebook</a>
-            <a href="https://twitter.com/TataMotors" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">Twitter</a>
-            <a href="https://www.instagram.com/tatamotorsgroup/" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">Instagram</a>
-          </div>
+          <a href="/auth" className="inline-block bg-[#307FE2] hover:bg-blue-800 text-white px-6 py-2 rounded-full text-base font-bold shadow transition">Signup</a>
         </div>
       </footer>
     </div>

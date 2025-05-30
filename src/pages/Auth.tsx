@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -73,8 +72,12 @@ const Auth = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">T</span>
+          <div className="w-20 h-20 bg-[#307FE2] rounded-lg flex items-center justify-center mx-auto mb-4 drop-shadow-lg">
+            <img
+              src="/tata-motors-logo.png"
+              alt="Tata Motors Logo"
+              className="w-14 h-14 object-contain"
+            />
           </div>
           <CardTitle className="text-2xl">
             {isSignUp ? "Create Account" : "Welcome Back"}
